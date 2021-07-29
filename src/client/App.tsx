@@ -1,64 +1,41 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { BrowserRouter, Switch, Route, Link, NavLink } from 'react-router-dom';
 
-/* HOOK REACT EXAMPLE */
+import Home from './views/Home';
+import Details from './views/Details';
+import CreateEdit from './views/CreateEdit';
+
 const App = (props: AppProps) => {
-	const [greeting, setGreeting] = useState<string>('');
-
-	useEffect(() => {
-		async function getGreeting() {
-			try {
-				const res = await fetch('/api/hello');
-				const greeting = await res.json();
-				setGreeting(greeting);
-			} catch (error) {
-				console.log(error);
-			}
-		}
-		getGreeting();
-	}, []);
-
 	return (
-		<main className="container my-5">
-			<h1 className="text-primary text-center">Hello {greeting}!</h1>
-		</main>
+			<BrowserRouter>
+				<nav className="navbar sticky-top navbar-dark bg-info p-3 mb-5">
+					<div className="container-fluid">
+						<Link to="/" className="navbar-brand">🐦 Chirper</Link>
+						<div className="d-flex">
+							<Link to="/create" className="btn btn-warning">Chirp</Link>
+						</div>
+					</div>
+				</nav>				
+				<main className="container my-5">			
+					<Switch>
+							<Route exact path="/">
+								<Home />
+							</Route>
+							<Route exact path="/details/:id">
+								<Details />
+							</Route>
+							<Route exact path="/create">
+								<CreateEdit isEdit={false}  />
+							</Route>
+							<Route exact path="/edit/:id">
+								<CreateEdit isEdit={true}  />
+							</Route>
+					</Switch>
+				</main>				
+			</BrowserRouter>
 	);
 };
 
 interface AppProps {}
-
-/* CLASS REACT EXAMPLE */
-// class App extends React.Component<IAppProps, IAppState> {
-// 	constructor(props: IAppProps) {
-// 		super(props);
-// 		this.state = {
-// 			name: null
-// 		};
-// 	}
-
-// 	async componentDidMount() {
-// 		try {
-// 			let r = await fetch('/api/hello');
-// 			let name = await r.json();
-// 			this.setState({ name });
-// 		} catch (error) {
-// 			console.log(error);
-// 		}
-// 	}
-
-// 	render() {
-// 		return (
-// 			<main className="container my-5">
-// 				<h1 className="text-primary text-center">Hello {this.state.name}!</h1>
-// 			</main>
-// 		);
-// 	}
-// }
-
-// export interface IAppProps {}
-
-// export interface IAppState {
-// 	name: string;
-// }
 
 export default App;
